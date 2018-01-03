@@ -41,6 +41,21 @@ def get_menus(json_pages):
     }
 
 
+def get_children_of_menu(menus, menu_id, children_to_skip=None):
+    if children_to_skip is None:
+        children_to_skip = set([])
+    children_to_skip.add(menu_id)
+
+    direct_children_ids = menus[menu_id]["child_ids"]
+
+    children_ids = set(direct_children_ids)
+    for direct_child_id in direct_children_ids:
+        if direct_child_id not in children_to_skip:
+            children_of_children = get_children_of_menu(menus, direct_child_id, children_to_skip)
+            children_ids.update(children_of_children)
+    return children_ids
+
+
 def main():
     json_pages = get_json_pages()
     menus = get_menus(json_pages)
