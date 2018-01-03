@@ -9,10 +9,13 @@ def get_challenge_json(id, page):
     return response.json()
 
 
+def get_number_of_pages(challenge_json):
+    return challenge_json["pagination"]["total"]
+
+
 def main():
     challenge_json = get_challenge_json(1, 1)
-    print(challenge_json)
+    number_of_pages = get_number_of_pages(challenge_json)
 
 if __name__ == "__main__":
     main()
-
