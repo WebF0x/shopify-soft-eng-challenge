@@ -1,6 +1,7 @@
 from menu_cycle_checker.main import get_children_of_menu
 from menu_cycle_checker.main import get_number_of_pages
 from menu_cycle_checker.main import get_menus
+from menu_cycle_checker.main import get_menus_by_validity
 
 import unittest
 
@@ -99,3 +100,30 @@ class TestReadChallengeJson(unittest.TestCase):
         self.assertEqual(set([1, 2, 3, 4]), get_children_of_menu(menus, 2))
         self.assertEqual(set([1, 2, 3, 4]), get_children_of_menu(menus, 3))
         self.assertEqual(set([1, 2, 3, 4]), get_children_of_menu(menus, 4))
+
+    def test_split_menus_by_validity(self):
+        menus = {
+            1: {'id': 1, 'data': 'a', 'child_ids': []},
+            2: {'id': 2, 'data': 'b', 'child_ids': [3]},
+            3: {'id': 3, 'data': 'c', 'child_ids': [4]},
+            4: {'id': 4, 'data': 'd', 'child_ids': [1]},
+            5: {'id': 5, 'data': 'e', 'child_ids': [5]},
+            6: {'id': 6, 'data': 'f', 'child_ids': [7]},
+            7: {'id': 7, 'data': 'g', 'child_ids': [6]},
+            8: {'id': 8, 'data': 'h', 'child_ids': [5]}
+        }
+        valid_menus, invalid_menus = get_menus_by_validity(menus)
+        expected_valid_menus = [
+            {'id': 1, 'children': set()},
+            {'id': 2, 'children': set([1, 3, 4])},
+            {'id': 3, 'children': set([1, 4])},
+            {'id': 4, 'children': set([1])},
+            {'id': 8, 'children': set([5])}
+        ]
+        expected_invalid_menus = [
+            {'id': 5, 'children': set([5])},
+            {'id': 6, 'children': set([6, 7])},
+            {'id': 7, 'children': set([6, 7])}
+        ]
+        self.assertEqual(expected_valid_menus, valid_menus)
+        self.assertEqual(expected_invalid_menus, invalid_menus)

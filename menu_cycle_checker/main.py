@@ -54,9 +54,28 @@ def get_children_of_menu(menus, menu_id, children_to_skip=None):
     return children_ids
 
 
+def get_menus_by_validity(menus):
+    menus_and_children = {
+        menu_id: {"id": menu_id, "children": get_children_of_menu(menus, menu_id)}
+        for menu_id in menus
+    }
+    valid_menus = [
+        menus_and_children[menu_id]
+        for menu_id in menus_and_children
+        if menu_id not in menus_and_children[menu_id]["children"]
+    ]
+    invalid_menus = [
+        menus_and_children[menu_id]
+        for menu_id in menus_and_children
+        if menu_id in menus_and_children[menu_id]["children"]
+    ]
+    return valid_menus, invalid_menus
+
+
 def main():
     json_pages = get_json_pages()
     menus = get_menus(json_pages)
+    valid_menus, invalid_menus = get_menus_by_validity(menus)
     pass
 
 
