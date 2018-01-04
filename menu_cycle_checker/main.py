@@ -34,9 +34,7 @@ def get_menus(json_pages):
     ]
     menus_list = sum(pages_of_menus, [])
     return {
-        menu["id"]: {
-            key: menu[key] for key in menu if key != "id"
-        }
+        menu["id"]: menu
         for menu in menus_list
     }
 
