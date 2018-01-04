@@ -51,7 +51,7 @@ def get_children_of_menu(menus, menu_id, children_to_skip=None):
         if direct_child_id not in children_to_skip:
             children_of_children = get_children_of_menu(menus, direct_child_id, children_to_skip)
             children_ids.update(children_of_children)
-    return children_ids
+    return list(children_ids)
 
 
 def get_menus_by_validity(menus):
