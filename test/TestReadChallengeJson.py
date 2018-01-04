@@ -50,7 +50,7 @@ class TestReadChallengeJson(unittest.TestCase):
             3: {'id': 3, 'data': 'c', 'child_ids': []},
             4: {'id': 4, 'data': 'd', 'child_ids': [2]}
         }
-        self.assertEqual(expected_menus, menus)
+        self.assertCountEqual(expected_menus, menus)
 
     def test_get_direct_children_of_menu(self):
         menus = {
@@ -59,10 +59,10 @@ class TestReadChallengeJson(unittest.TestCase):
             3: {'id': 3, 'data': 'c', 'child_ids': [4]},
             4: {'id': 4, 'data': 'd', 'child_ids': []}
         }
-        self.assertEqual([], get_children_of_menu(menus, 1))
+        self.assertCountEqual([], get_children_of_menu(menus, 1))
         self.assertIn(1, get_children_of_menu(menus, 2))
         self.assertIn(4, get_children_of_menu(menus, 3))
-        self.assertEqual([], get_children_of_menu(menus, 4))
+        self.assertCountEqual([], get_children_of_menu(menus, 4))
 
     def test_get_children_of_menu_recursively(self):
         menus = {
@@ -70,23 +70,23 @@ class TestReadChallengeJson(unittest.TestCase):
             2: {'id': 2, 'data': 'b', 'child_ids': [3]},
             3: {'id': 3, 'data': 'c', 'child_ids': []},
         }
-        self.assertEqual([2, 3], get_children_of_menu(menus, 1))
-        self.assertEqual([3], get_children_of_menu(menus, 2))
-        self.assertEqual([], get_children_of_menu(menus, 3))
+        self.assertCountEqual([2, 3], get_children_of_menu(menus, 1))
+        self.assertCountEqual([3], get_children_of_menu(menus, 2))
+        self.assertCountEqual([], get_children_of_menu(menus, 3))
 
     def test_get_children_of_menu_cycling_to_self(self):
         menus = {
             1: {'id': 1, 'data': 'a', 'child_ids': [1]}
         }
-        self.assertEqual([1], get_children_of_menu(menus, 1))
+        self.assertCountEqual([1], get_children_of_menu(menus, 1))
 
     def test_get_children_of_menu_cycling_to_self_indirectly(self):
         menus = {
             1: {'id': 1, 'data': 'a', 'child_ids': [2]},
             2: {'id': 2, 'data': 'b', 'child_ids': [1]}
         }
-        self.assertEqual([1, 2], get_children_of_menu(menus, 1))
-        self.assertEqual([1, 2], get_children_of_menu(menus, 2))
+        self.assertCountEqual([1, 2], get_children_of_menu(menus, 1))
+        self.assertCountEqual([1, 2], get_children_of_menu(menus, 2))
 
     def test_get_children_of_menu_with_diamond_cycle_to_self(self):
         menus = {
@@ -96,10 +96,10 @@ class TestReadChallengeJson(unittest.TestCase):
             4: {'id': 4, 'data': 'd', 'child_ids': [1]}
         }
 
-        self.assertEqual([1, 2, 3, 4], get_children_of_menu(menus, 1))
-        self.assertEqual([1, 2, 3, 4], get_children_of_menu(menus, 2))
-        self.assertEqual([1, 2, 3, 4], get_children_of_menu(menus, 3))
-        self.assertEqual([1, 2, 3, 4], get_children_of_menu(menus, 4))
+        self.assertCountEqual([1, 2, 3, 4], get_children_of_menu(menus, 1))
+        self.assertCountEqual([1, 2, 3, 4], get_children_of_menu(menus, 2))
+        self.assertCountEqual([1, 2, 3, 4], get_children_of_menu(menus, 3))
+        self.assertCountEqual([1, 2, 3, 4], get_children_of_menu(menus, 4))
 
     def test_split_menus_by_validity(self):
         menus = {
@@ -125,5 +125,5 @@ class TestReadChallengeJson(unittest.TestCase):
             {'id': 6, 'children': [6, 7]},
             {'id': 7, 'children': [6, 7]}
         ]
-        self.assertEqual(expected_valid_menus, valid_menus)
-        self.assertEqual(expected_invalid_menus, invalid_menus)
+        self.assertCountEqual(expected_valid_menus, valid_menus)
+        self.assertCountEqual(expected_invalid_menus, invalid_menus)
