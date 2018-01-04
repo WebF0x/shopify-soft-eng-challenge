@@ -1,4 +1,5 @@
 from math import ceil
+from json import dumps
 
 import requests
 
@@ -56,7 +57,7 @@ def get_children_of_menu(menus, menu_id, children_to_skip=None):
 
 def get_menus_by_validity(menus):
     menus_and_children = {
-        menu_id: {"id": menu_id, "children": get_children_of_menu(menus, menu_id)}
+        menu_id: {"root_id": menu_id, "children": get_children_of_menu(menus, menu_id)}
         for menu_id in menus
     }
     valid_menus = [
@@ -72,10 +73,19 @@ def get_menus_by_validity(menus):
     return valid_menus, invalid_menus
 
 
+def get_output_menus(valid_menus, invalid_menus):
+    return {
+        "valid_menus": valid_menus,
+        "invalid_menus": invalid_menus
+    }
+
+
 def main():
     json_pages = get_json_pages()
     menus = get_menus(json_pages)
     valid_menus, invalid_menus = get_menus_by_validity(menus)
+    output_menus = get_output_menus(valid_menus, invalid_menus)
+    print(dumps(output_menus))
     pass
 
 

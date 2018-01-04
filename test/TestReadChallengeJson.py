@@ -2,6 +2,7 @@ from menu_cycle_checker.main import get_children_of_menu
 from menu_cycle_checker.main import get_number_of_pages
 from menu_cycle_checker.main import get_menus
 from menu_cycle_checker.main import get_menus_by_validity
+from menu_cycle_checker.main import get_output_menus
 
 import unittest
 
@@ -114,16 +115,38 @@ class TestReadChallengeJson(unittest.TestCase):
         }
         valid_menus, invalid_menus = get_menus_by_validity(menus)
         expected_valid_menus = [
-            {'id': 1, 'children': []},
-            {'id': 2, 'children': [1, 3, 4]},
-            {'id': 3, 'children': [1, 4]},
-            {'id': 4, 'children': [1]},
-            {'id': 8, 'children': [5]}
+            {'root_id': 1, 'children': []},
+            {'root_id': 2, 'children': [1, 3, 4]},
+            {'root_id': 3, 'children': [1, 4]},
+            {'root_id': 4, 'children': [1]},
+            {'root_id': 8, 'children': [5]}
         ]
         expected_invalid_menus = [
-            {'id': 5, 'children': [5]},
-            {'id': 6, 'children': [6, 7]},
-            {'id': 7, 'children': [6, 7]}
+            {'root_id': 5, 'children': [5]},
+            {'root_id': 6, 'children': [6, 7]},
+            {'root_id': 7, 'children': [6, 7]}
         ]
         self.assertCountEqual(expected_valid_menus, valid_menus)
         self.assertCountEqual(expected_invalid_menus, invalid_menus)
+
+    def test_get_output_menus(self):
+        valid_menus = [
+            {'root_id': 1, 'children': [2, 3]},
+            {'root_id': 2, 'children': [4]}
+        ]
+        invalid_menus = [
+            {'root_id': 3, 'children': [3]},
+            {'root_id': 4, 'children': [1, 4]}
+        ]
+        output_menus = get_output_menus(valid_menus, invalid_menus)
+        expected_output_menus = {
+            "valid_menus": [
+                {'root_id': 1, 'children': [2, 3]},
+                {'root_id': 2, 'children': [4]}
+            ],
+            "invalid_menus": [
+                {'root_id': 3, 'children': [3]},
+                {'root_id': 4, 'children': [1, 4]}
+            ]
+        }
+        self.assertEqual(expected_output_menus, output_menus)
