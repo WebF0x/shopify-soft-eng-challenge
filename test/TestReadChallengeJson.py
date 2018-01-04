@@ -3,6 +3,9 @@ from menu_cycle_checker.main import get_number_of_pages
 from menu_cycle_checker.main import get_menus
 from menu_cycle_checker.main import get_menus_by_validity
 from menu_cycle_checker.main import get_output_menus
+from menu_cycle_checker.main import get_output_menus_json
+
+from json import loads
 
 import unittest
 
@@ -150,3 +153,17 @@ class TestReadChallengeJson(unittest.TestCase):
             ]
         }
         self.assertEqual(expected_output_menus, output_menus)
+
+    def test_get_output_menus_json(self):
+        output_menus_dict = {
+            "valid_menus": [
+                {'root_id': 1, 'children': [2, 3]},
+                {'root_id': 2, 'children': [4]}
+            ],
+            "invalid_menus": [
+                {'root_id': 3, 'children': [3]},
+                {'root_id': 4, 'children': [1, 4]}
+            ]
+        }
+        output_menus_json = get_output_menus_json(output_menus_dict)
+        self.assertEqual(output_menus_dict, loads(output_menus_json))

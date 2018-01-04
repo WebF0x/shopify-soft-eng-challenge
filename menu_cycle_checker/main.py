@@ -4,7 +4,6 @@ from json import dumps
 import requests
 
 SHOPIFY_CHALLENGE_URL = "https://backend-challenge-summer-2018.herokuapp.com/challenges.json"
-SHOPIFY_CHALLENGE_ID = 1
 
 
 def get_json_page(id, page):
@@ -13,11 +12,11 @@ def get_json_page(id, page):
     return response.json()
 
 
-def get_json_pages():
-    first_page = get_json_page(SHOPIFY_CHALLENGE_ID, 1)
+def get_json_pages(challenge_id):
+    first_page = get_json_page(challenge_id, 1)
     number_of_pages = get_number_of_pages(first_page)
     return [
-        get_json_page(SHOPIFY_CHALLENGE_ID, page_number)
+        get_json_page(challenge_id, page_number)
         for page_number in range(1, number_of_pages + 1)
     ]
 
@@ -80,13 +79,27 @@ def get_output_menus(valid_menus, invalid_menus):
     }
 
 
-def main():
-    json_pages = get_json_pages()
+def get_output_menus_json(output_menus):
+    return dumps(output_menus)
+
+
+def solve_shopify_challenge(challenge_id):
+    json_pages = get_json_pages(challenge_id)
     menus = get_menus(json_pages)
     valid_menus, invalid_menus = get_menus_by_validity(menus)
     output_menus = get_output_menus(valid_menus, invalid_menus)
-    print(dumps(output_menus))
-    pass
+    output_menus_json = get_output_menus_json(output_menus)
+    return output_menus_json
+
+
+def main():
+    output_menus_json_1 = solve_shopify_challenge(1)
+    output_menus_json_2 = solve_shopify_challenge(2)
+    print("Solution to challenge #1:")
+    print(output_menus_json_1)
+    print("Solution to challenge #2:")
+    print(output_menus_json_2)
+    print("My name is Maxime Dupuis and I hope we will meet soon :)")
 
 
 if __name__ == "__main__":
