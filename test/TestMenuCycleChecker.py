@@ -10,7 +10,7 @@ from json import loads
 import unittest
 
 
-class TestReadChallengeJson(unittest.TestCase):
+class TestMenuCycleChecker(unittest.TestCase):
     def test_get_number_of_pages(self):
         json_page = {
             'pagination': {
